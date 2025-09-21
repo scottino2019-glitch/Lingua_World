@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scuola di Lingue</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        header {
+            background-color: #4a90e2;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .card {
+            width: 250px;
+            height: 150px;
+            margin: 15px;
+            border-radius: 10px;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4em;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+        }
+
+        /* Colori per le varie lingue */
+        .cinese { background-color: #e74c3c; }
+        .coreano { background-color: #2ecc71; }
+        .giapponese { background-color: #9b59b6; }
+        .arabo { background-color: #f39c12; }
+        .turco { background-color: #1abc9c; }
+        .russo { background-color: #2980b9; }
+        .inglese { background-color: #34495e; }
+        .francese { background-color: #e67e22; }
+        .spagnolo { background-color: #c0392b; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🌍 Benvenuto nella Scuola di Lingue</h1>
+        <p>Scegli la lingua che vuoi imparare</p>
+    </header>
+
+    <div class="container">
+        <a href="cinese.html" class="card cinese">🇨🇳 Cinese</a>
+        <a href="coreano.html" class="card coreano">🇰🇷 Coreano</a>
+        <a href="giapponese.html" class="card giapponese">🇯🇵 Giapponese</a>
+        <a href="arabo.html" class="card arabo">🇸🇦 Arabo</a>
+        <a href="turco.html" class="card turco">🇹🇷 Turco</a>
+        <a href="russo.html" class="card russo">🇷🇺 Russo</a>
+        <a href="inglese.html" class="card inglese">🇬🇧 Inglese</a>
+        <a href="francese.html" class="card francese">🇫🇷 Francese</a>
+        <a href="spagnolo.html" class="card spagnolo">🇪🇸 Spagnolo</a>
+    </div>
+
+</body>
+</html>
