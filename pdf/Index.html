@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lettura PDF Online</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        header {
+            background-color: #2c3e50;
+            color: white;
+            padding: 15px;
+        }
+        #pdf-container {
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            padding: 10px;
+            max-width: 900px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            border: 1px solid #ccc;
+        }
+        .controls {
+            margin: 20px;
+        }
+        button {
+            background: #2c3e50;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            margin: 0 5px;
+            cursor: pointer;
+        }
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>📖 Lettura PDF Online (senza download)</h1>
+</header>
+
+<div class="controls">
+    <button id="prev-btn">⬅ Pagina Precedente</button>
+    <span>Pagina: <span id="page-num"></span> / <span id="page-count"></span></span>
+    <button id="next-btn">Pagina Successiva ➡</button>
+</div>
+
+<div id="pdf-container">
+    <canvas id="pdf-render"></canvas>
+</div>
+
+<!-- PDF.js -->
+<script src="pdf.js"></script>
+<script>
+    // Imposta percorso al worker PDF.js
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'pdf.worker.js';
+
+    // QUI metti il percorso del tuo PDF
+    const url = 'esempio.pdf'; // deve essere nella stessa cartella di questo HTML
+
+    let pdfDoc = null,
+        pageNum = 1,
+        pageIsRendering = false,
+        pageNumIsPending = null;
+
+    const scale = 1.5,
+          canvas = document.getElementById('pdf-render'),
+          ctx = canvas.getContext('2d');
+
+    // Renderizza la pagina
+    const renderPage = num => {
+        pageIsRendering = true;
+
+        // Ottiene la pagina
+        pdfDoc.getPage(num).then(page => {
+            const viewport = page.getViewport({ scale });
+            canvas.height = viewport.height;
+            canvas.width = viewport.width;
+
+            const renderCtx = {
+                canvasContext: ctx,
+                viewport
+            };
+
+            page.render(renderCtx).promise.then(() => {
+                pageIsRendering = false;
+
+                if (pageNumIsPending !== null) {
+                    renderPage(pageNumIsPending);
+                    pageNumIsPending = null;
+                }
+            });
+
+            // Aggiorna il contatore
+            document.getElementById('page-num').textContent = num;
+        });
+    };
+
+    // Verifica se il rendering è in corso
+    const queueRenderPage = num => {
+        if (pageIsRendering) {
+            pageNumIsPending = num;
+        } else {
+            renderPage(num);
+        }
+    };
+
+    // Mostra pagina precedente
+    document.getElementById('prev-btn').addEventListener('click', () => {
+        if (pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
+    });
+
+    // Mostra pagina successiva
+    document.getElementById('next-btn').addEventListener('click', () => {
+        if (pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum);
+    });
+
+    // Carica il documento PDF
+    pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+        pdfDoc = pdfDoc_;
+        document.getElementById('page-count').textContent = pdfDoc.numPages;
+        renderPage(pageNum);
+    });
+</script>
+
+</body>
+</html>
